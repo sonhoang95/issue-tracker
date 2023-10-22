@@ -8,8 +8,6 @@ import { usePathname } from "next/navigation";
 const NavBar = () => {
   const currentPath = usePathname();
 
-  console.log(currentPath);
-
   const links = [
     {
       label: "Dashboard",
@@ -23,15 +21,15 @@ const NavBar = () => {
 
   return (
     <nav className="flex gap-6 border-b px-5 h-14 items-center mb-5">
-      <Link href="/" className="text-blue-800 text-xl">
+      <Link href="/" className="text-zinc-800 text-xl">
         <AiFillBug />
       </Link>
       <ul className="flex gap-6">
         {links.map((link) => {
           const classes = classNames({
-            "text-blue-600 border-b-2 border-yellow-500":
+            "text-zinc-800 border-b-2 border-zinc-500":
               link.href === currentPath,
-            "text-blue-400": link.href !== currentPath,
+            "text-zinc-500": link.href !== currentPath,
             "font-medium transition-colors duration-200": true,
           });
           return (
