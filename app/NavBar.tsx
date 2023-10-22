@@ -29,9 +29,9 @@ const NavBar = () => {
       <ul className="flex gap-6">
         {links.map((link) => {
           const classes = classNames({
-            "text-blue-800 border-b-2 border-yellow-500":
+            "text-blue-600 border-b-2 border-yellow-500":
               link.href === currentPath,
-            "text-blue-500": link.href !== currentPath,
+            "text-blue-400": link.href !== currentPath,
             "font-medium transition-colors duration-200": true,
           });
           return (
