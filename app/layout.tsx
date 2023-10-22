@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
+import "@radix-ui/themes/styles.css";
 import "./globals.css";
 import NavBar from "./NavBar";
+import { Theme } from "@radix-ui/themes";
 
 const open_sans = Open_Sans({ subsets: ["latin"] });
 
@@ -18,8 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={open_sans.className}>
-        <NavBar />
-        <main>{children}</main>
+        <Theme>
+          <NavBar />
+          <main>{children}</main>
+        </Theme>
       </body>
     </html>
   );
