@@ -1,18 +1,21 @@
 "use client";
 
-import { Button, Callout, Text, TextArea, TextField } from "@radix-ui/themes";
-import SimpleMDE from "react-simplemde-editor";
-import "easymde/dist/easymde.min.css";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-import { useState } from "react";
-import z from "zod";
+import { ErrorMessage, LoadingSpinner } from "@/app/components";
 import { createIssueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import ErrorMessage from "@/app/components/ErrorMessage";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
-import delay from "delay";
+import { Button, Callout, TextField } from "@radix-ui/themes";
+import axios from "axios";
+import "easymde/dist/easymde.min.css";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import z from "zod";
+
+// lazy loading a component, this is necessary for client side components to not render first on the server
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+});
 
 type NewIssueForm = z.infer<typeof createIssueSchema>;
 
