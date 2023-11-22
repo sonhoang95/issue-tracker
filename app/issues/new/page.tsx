@@ -12,6 +12,7 @@ import { createIssueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import delay from "delay";
 
 type NewIssueForm = z.infer<typeof createIssueSchema>;
 
