@@ -8,6 +8,7 @@ interface Props {
   params: { id: string };
 }
 
+// SRP: Single Responsibility Principle
 const IssueDetailsPage = async ({ params }: Props) => {
   const issue = await prisma.issue.findUnique({ where: { id: params.id } });
 
