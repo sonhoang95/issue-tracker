@@ -4,7 +4,7 @@ import { ErrorMessage, LoadingSpinner } from "@/app/components";
 import { issueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue } from "@prisma/client";
-import { Button, Callout, TextField } from "@radix-ui/themes";
+import { Box, Button, Callout, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import z from "zod";
+import Dropdown from "./Dropdown";
 
 // lazy loading a component, this is necessary for client side components to not render first on the server
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
@@ -28,6 +29,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<NewIssueFormData>({
     resolver: zodResolver(issueSchema),
@@ -36,9 +38,13 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<NewIssueFormData> = async (data) => {
+    console.log(data);
     try {
       setSubmitting(true);
-      await axios.post("/api/issues", data);
+
+      if (issue) await axios.patch("/api/issues/" + issue.id, data);
+      else await axios.post("/api/issues", data);
+
       router.push("/issues");
     } catch (error) {
       setSubmitting(false);
@@ -54,23 +60,41 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         </Callout.Root>
       )}
       <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-        <TextField.Root>
-          <TextField.Input
-            defaultValue={issue?.title}
-            placeholder="Title"
-            {...register("title")}
-          />
-        </TextField.Root>
-        <ErrorMessage>{errors.title?.message}</ErrorMessage>
-        <Controller
-          name="description"
-          control={control}
-          defaultValue={issue?.description}
-          render={({ field }) => <SimpleMDE {...field} />}
-        />
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="space-y-3">
+            <TextField.Root>
+              <TextField.Input
+                defaultValue={issue?.title}
+                placeholder="Title"
+                {...register("title")}
+              />
+            </TextField.Root>
+            <ErrorMessage>{errors.title?.message}</ErrorMessage>
+            <Controller
+              name="description"
+              control={control}
+              defaultValue={issue?.description}
+              render={({ field }) => <SimpleMDE {...field} />}
+            />
+          </div>
+          {issue && (
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <Dropdown
+                  setValue={setValue}
+                  status={issue.status}
+                  field={field}
+                />
+              )}
+            />
+          )}
+        </div>
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
         <Button disabled={isSubmitting}>
-          Submit New Issue {isSubmitting && <LoadingSpinner />}
+          {issue ? "Update Issue" : "Submit New Issue"}{" "}
+          {isSubmitting && <LoadingSpinner />}
         </Button>
       </form>
     </div>
