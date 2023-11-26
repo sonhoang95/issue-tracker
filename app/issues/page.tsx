@@ -3,6 +3,8 @@ import { Table } from "@radix-ui/themes";
 import { CustomLink, IssueBadge } from "../components";
 import IssueActions from "./IssueActions";
 
+export const dynamic = "force-dynamic";
+
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
 
@@ -45,4 +47,5 @@ const IssuesPage = async () => {
     </div>
   );
 };
+
 export default IssuesPage;
